@@ -1,19 +1,23 @@
 import { JSDOM } from "jsdom";
-import { firefox } from "playwright";
+import { chromium } from "playwright";
 
 export const getHtmlPage = async (url: string) => {
   try {
-    const browser = await firefox.launch({ headless: false });
-    const page = await browser.newPage();
+    const browser = await chromium.launch({ headless: true });
+    const context = await browser.newContext({
+      userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36",
+    });
+    const page = await context.newPage();
 
     await page.goto(url, { waitUntil: "networkidle" });
+
     await page.waitForTimeout(2000);
-
-
-    await page.locator("#CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll").click();
-    await page.waitForTimeout(1000);
+    await page
+      .locator("#CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll")
+      .click();
 
     const html = await page.content();
+    await browser.close();
     return html;
   } catch (error) {
     console.error("Error fetching page:", error);
