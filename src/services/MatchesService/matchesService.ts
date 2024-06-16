@@ -106,7 +106,6 @@ const getMatches = async () => {
         const maps =
           matchElement.querySelector(".matchMeta")?.textContent || "";
 
-        // Adicione outras propriedades aqui, se necessário
         const match: IMatch = {
           id: id,
           time: time,
